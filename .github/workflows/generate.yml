@@ -53,6 +53,7 @@ jobs:
           export NETWORK_TEST_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
           go run -tags fts5 cmd/cpe/generate.go
           go run cmd/msrc/generate.go
+          go run cmd/msrc/generate_winoffice.go
           go run cmd/macoffice/generate.go
 
       - name: Validate NVD feeds
@@ -61,6 +62,7 @@ jobs:
           cp fleet/server/vulnerabilities/nvd/cpe_translations.json cpe_files/
           cp fleet/*.sqlite.gz cpe_files/
           cp fleet/msrc_out/*.json cpe_files/
+          cp fleet/winoffice_out/*.json cpe_files/
           cp fleet/macoffice_rel_notes/*.json cpe_files/
           cd fleet
           go run cmd/cpe/validate/main.go --db_dir ../cpe_files
@@ -86,6 +88,7 @@ jobs:
             fleet/*.sqlite.gz
             fleet/server/vulnerabilities/nvd/cpe_translations.json
             fleet/msrc_out/*.json
+            fleet/winoffice_out/*.json
             fleet/macoffice_rel_notes/*.json
           tag_name: ${{ steps.date.outputs.date }}
           target_commitish: release
