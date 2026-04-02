@@ -78,8 +78,17 @@ jobs:
         run: |
           git config --global user.email ""
           git config --global user.name "GitHub Actions Bot"
-          git commit --allow-empty -m 'Release ${{ steps.date.outputs.date }}'
-          git push origin release
+
+          # Ensure we're on master (actions/checkout already is, but be explicit)
+          git checkout master
+
+          # Keep the "new commit per release" behavior
+          git commit --allow-empty -m "Release ${{ steps.date.outputs.date }}"
+          git push origin master
+
+          # Create and push the release tag
+          git tag ${{ steps.date.outputs.date }}
+          git push origin ${{ steps.date.outputs.date }}
 
       - name: Release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # v0.1.14
